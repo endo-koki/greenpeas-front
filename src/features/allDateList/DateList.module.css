@@ -1,0 +1,126 @@
+h2,
+h3 {
+  text-align: left;
+  margin: 5px;
+}
+
+/* allDateList */
+/* .allDates {
+  width: 100%;
+  overflow-x: scroll;
+} */
+
+.allDates table,
+.summary table,
+.detail table {
+  border-collapse: collapse;
+  border: 1px solid black;
+  margin: 5px;
+  display: flex;
+  /* width: 100px;
+  overflow-x: scroll; */
+}
+
+.allDates table {
+  width: 100% - 10px;
+}
+
+.summary thead,
+.detail thead {
+  display: flex;
+}
+
+.allDates tbody,
+.summary tbody,
+.detail tbody {
+  display: flex;
+  overflow-x: scroll;
+}
+
+.allDates th,
+.allDates td,
+.summary th,
+.summary td,
+.detail th,
+.detail td {
+  width: 50px;
+  overflow: hidden;
+  display: block;
+  border: 0.5px solid black;
+  padding: 5px;
+  text-align: center;
+}
+
+.allDates .headRow {
+  height: 50px;
+}
+.summary .headRow,
+.detail .headRow {
+  height: 20px;
+}
+
+.allDates tbody th {
+  font-size: 80%;
+}
+
+.summary tbody th,
+.summary tbody td,
+.detail tbody th,
+.detail tbody td {
+  width: 60px;
+}
+
+.detail thead tr:nth-child(1) th {
+  width: 150px;
+  font-size: 100%;
+}
+
+.selected {
+  background-color: limegreen;
+}
+.suggested {
+  background-color: palegreen;
+}
+.exclude {
+  background-color: #777;
+}
+
+/* schedule */
+/* .summary,
+.detail {
+  display: flex;
+  margin: 5px;
+}
+
+.summaryBody,
+.detailBody {
+  width: 100% - 200px;
+  overflow-x: scroll;
+}
+
+.summary table,
+.detail table {
+  border-collapse: collapse;
+  border: 1px solid black;
+}
+
+.summary th,
+.summary td,
+.detail th,
+.detail td {
+  min-width: 50px;
+  border: 0.5px solid black;
+  padding: 5px;
+} */
+
+#toggleDetail {
+  display: none;
+}
+
+.downArrow {
+  width: 30px;
+  height: 30px;
+  border: 5px solid;
+  border-color: transparent transparent #565656 #565656;
+  transform: rotate(-45deg);
+}

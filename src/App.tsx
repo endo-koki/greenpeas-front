@@ -1,56 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
+import { useSelector } from 'react-redux';
+import { Loader } from './features/allDateList/Loader';
+import { AllDateList } from './features/allDateList/AllDateList';
+import { Schedule } from './features/allDateList/Schedule';
+import { selectMemMat } from './features/allDateList/allDateSlice';
 import './App.css';
 
 function App() {
+  const memMat: string[][] = useSelector(selectMemMat);
+  const showDate: boolean = memMat.length > 0;
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+      <h1>M練日程自動調整ツール</h1>
+      <Loader />
+      {showDate && <AllDateList />}
+      {showDate && <Schedule />}
     </div>
   );
 }
