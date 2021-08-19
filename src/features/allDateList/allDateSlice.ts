@@ -1,25 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from '../../app/store';
 
-// export const memList: string[] = [
-//   '山田',
-//   '知念',
-//   '中島',
-//   '有岡',
-//   '伊野尾',
-//   '高木',
-//   '八乙女',
-//   '薮',
-// ];
-// export const allDateList: string[] = ['8/15', '8/16', '8/17', '8/18'];
-// export const memMat: string[][] = [
-//   ['○', '△', '×', '○', '○', '○', '○', '○'],
-//   ['○', '○', '○', '○', '○', '△', '○', '△'],
-//   ['△', '○', '○', '×', '△', '×', '×', '○'],
-//   ['○', '○', '△', '○', '×', '○', '○', '△'],
-// ];
-// export const dateArr: dateState[] = [0, 2, 3, 1];
-
 /** 0: default, 1: selected, 2: suggested, 3: excluded */
 export type dateState = 0 | 1 | 2 | 3;
 export interface allDateState {

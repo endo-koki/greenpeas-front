@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import {
   includeDate,
@@ -7,25 +7,78 @@ import {
   selectDateArr,
   selectAllDateList,
   dateState,
+  selectMemList,
 } from './allDateSlice';
 import styles from './DateList.module.css';
+
+/** calculate table width. (table width = cell width + border width * 2) */
+export function calcTableWidth(
+  headWidth: number,
+  cellWidth: number,
+  cellNum: number,
+  innerWidth: number
+): number {
+  const width: number = headWidth + cellWidth * cellNum;
+  return Math.min(width, innerWidth - 10);
+}
 
 function DateColumn(props: {
   idx: number;
   memVec: string[];
+  memList: string[];
   date: string;
   state: dateState;
+  innerWidth: number;
 }) {
   const dispatch = useAppDispatch();
 
-  const okNum: number = props.memVec.filter((val) => val === '○').length;
-  const qNum: number = props.memVec.filter((val) => val === '△').length;
-  const ngNum: number = props.memVec.filter((val) => val === '×').length;
+  const okMems: string[] = props.memList.filter(
+    (_, idx) => props.memVec[idx] === '○'
+  );
+  const qMems: string[] = props.memList.filter(
+    (_, idx) => props.memVec[idx] === '△'
+  );
+  const ngMems: string[] = props.memList.filter(
+    (_, idx) => props.memVec[idx] === '×'
+  );
 
   function handleContextMenu(e: React.MouseEvent) {
     e.preventDefault();
     dispatch(excludeDate(props.idx));
   }
+
+  // マウスについてくる吹き出し
+  const [showInfo, setShowInfo] = useState(false);
+  const [mousePos, setMousePos] = useState([0, 0]);
+  function handleMouseMove(e: React.MouseEvent) {
+    setShowInfo(true);
+    const pos: [number, number] = [
+      e.nativeEvent.clientX,
+      e.nativeEvent.clientY,
+    ];
+    setMousePos(pos);
+  }
+  let infoStyle;
+  if (mousePos[0] <= 0.8 * props.innerWidth) {
+    infoStyle = {
+      left: `${mousePos[0] + 10}px`,
+      top: `${mousePos[1] + 10}px`,
+    };
+  } else {
+    infoStyle = {
+      right: `${props.innerWidth - mousePos[0] + 10}px`,
+      top: `${mousePos[1] + 10}px`,
+    };
+  }
+  const dateInfo = (
+    <div className={styles.dateInfo} style={infoStyle}>
+      ○: {okMems.join(', ')}
+      <br />
+      △: {qMems.join(', ')}
+      <br />
+      ×: {ngMems.join(', ')}
+    </div>
+  );
 
   const styleList: string[] = [
     '',
@@ -39,24 +92,28 @@ function DateColumn(props: {
       className={style}
       onClick={() => dispatch(includeDate(props.idx))}
       onContextMenu={(e) => handleContextMenu(e)}
+      onMouseMove={(e) => handleMouseMove(e)}
+      onMouseLeave={() => setShowInfo(false)}
     >
       <th className={styles.headRow}>{props.date}</th>
-      <td>{okNum}</td>
-      <td>{qNum}</td>
-      <td>{ngNum}</td>
+      <td>{okMems.length}</td>
+      <td>{qMems.length}</td>
+      <td>{ngMems.length}</td>
+      {showInfo && dateInfo}
     </tr>
   );
 }
 
-export function AllDateList() {
+export function AllDateList(props: { innerWidth: number }) {
   const memMat = useAppSelector(selectMemMat);
   const dateArr = useAppSelector(selectDateArr);
+  const memList = useAppSelector(selectMemList);
   const allDateList = useAppSelector(selectAllDateList);
 
   const head = (
     <thead>
       <tr>
-        <th className={styles.headRow}>日程</th>
+        <th className={`${styles.headRow} ${styles.markerCol}`}>日程</th>
         <th>○</th>
         <th>△</th>
         <th>×</th>
@@ -71,16 +128,26 @@ export function AllDateList() {
         key={String(i)}
         idx={i}
         memVec={memMat[i]}
+        memList={memList}
         date={allDateList[i]}
         state={dateArr[i]}
+        innerWidth={props.innerWidth}
       />
     );
   }
 
+  const tableWidth: number = calcTableWidth(
+    41,
+    61,
+    allDateList.length,
+    props.innerWidth
+  );
+  const style = { width: `${tableWidth}px` };
+
   return (
     <div className={styles.allDates}>
       <h2>日程リスト</h2>
-      <table>
+      <table style={style}>
         {head}
         <tbody>{columns}</tbody>
       </table>

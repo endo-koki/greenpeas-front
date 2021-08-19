@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import stringWidth from 'string-width';
 import { useAppSelector } from '../../app/hooks';
 import {
   dateState,
@@ -7,21 +8,24 @@ import {
   selectMemList,
   selectAllDateList,
 } from './allDateSlice';
+import { calcTableWidth } from './AllDateList';
 import styles from './DateList.module.css';
 
 function SummaryHead(props: { okNum: number; qNum: number; ngNum: number }) {
-  const headItems1 = ['○', '△', '×'].map((val) => <th>{val}</th>);
+  const headItems1 = ['○', '△', '×'].map((val) => (
+    <th className={styles.markerCol}>{val}</th>
+  ));
   return (
     <thead>
       <tr>
-        <th className={styles.headRow}> </th>
+        <th className={`${styles.headRow} ${styles.markerCol}`}> </th>
         {headItems1}
       </tr>
       <tr>
-        <th className={styles.headRow}>合計</th>
-        <th>{props.okNum}</th>
-        <th>{props.qNum}</th>
-        <th>{props.ngNum}</th>
+        <th className={`${styles.headRow} ${styles.markerCol}`}>合計</th>
+        <th className={styles.markerCol}>{props.okNum}</th>
+        <th className={styles.markerCol}>{props.qNum}</th>
+        <th className={styles.markerCol}>{props.ngNum}</th>
       </tr>
     </thead>
   );
@@ -52,6 +56,7 @@ function SummaryTable(props: {
   memMat: string[][];
   dateArr: dateState[];
   memList: string[];
+  innerWidth: number;
 }) {
   const okVec: number[] = new Array(props.memList.length).fill(0);
   const qVec: number[] = okVec.slice(0);
@@ -77,9 +82,21 @@ function SummaryTable(props: {
   const qNum: number = qVec.reduce((x, y) => x + y);
   const ngNum: number = ngVec.reduce((x, y) => x + y);
 
+  // const tableWidth: number = Math.min(
+  //   71 * props.memList.length + 82,
+  //   props.innerWidth - 10
+  // );
+  const tableWidth: number = calcTableWidth(
+    82,
+    71,
+    props.memList.length,
+    props.innerWidth
+  );
+  const tableStyle = { width: `${tableWidth}px` };
+
   return (
     <div className={styles.summary}>
-      <table>
+      <table style={tableStyle}>
         <SummaryHead okNum={okNum} qNum={qNum} ngNum={ngNum} />
         <SummaryBody
           memList={props.memList}
@@ -97,19 +114,40 @@ function DetailHead(props: {
   dateArr: dateState[];
   allDateList: string[];
 }) {
-  const isSelected = (val: any, idx: number) => {
+  const isSelected = (idx: number) => {
     const state: dateState = props.dateArr[idx];
     return state === 1 || state === 2;
   };
-  const selectedDates: string[] = props.allDateList.filter(isSelected);
-  const selectedVecs: string[][] = props.memMat.filter(isSelected);
+  const selectedDates: string[] = props.allDateList.filter((_, idx) =>
+    isSelected(idx)
+  );
+  const selectedVecs: string[][] = props.memMat.filter((_, idx) =>
+    isSelected(idx)
+  );
+
+  const calcFontSize = (text: string) => {
+    const strWidth: number = stringWidth(text);
+    // {width: 100px} -> (strWidth = 12) がちょうど良いくらい
+    if (strWidth <= 12) {
+      return '100%';
+    }
+    const ratio: number = (100 * 12) / strWidth;
+    return `${ratio.toFixed(2)}%`;
+  };
 
   const headItems = [<th className={styles.headRow}> </th>];
-  const okItems = [<th className={styles.headRow}>○</th>];
-  const qItems = [<th className={styles.headRow}>△</th>];
-  const ngItems = [<th className={styles.headRow}>×</th>];
+  const okItems = [
+    <th className={`${styles.headRow} ${styles.markerCol}`}>○</th>,
+  ];
+  const qItems = [
+    <th className={`${styles.headRow} ${styles.markerCol}`}>△</th>,
+  ];
+  const ngItems = [
+    <th className={`${styles.headRow} ${styles.markerCol}`}>×</th>,
+  ];
   for (let i = 0; i < selectedDates.length; i++) {
-    headItems.push(<th>{selectedDates[i]}</th>);
+    const style = { fontSize: calcFontSize(selectedDates[i]) };
+    headItems.push(<th style={style}>{selectedDates[i]}</th>);
     okItems.push(
       <th>{selectedVecs[i].filter((val) => val === '○').length}</th>
     );
@@ -171,10 +209,19 @@ function DetailTable(props: {
   dateArr: dateState[];
   memList: string[];
   allDateList: string[];
+  innerWidth: number;
 }) {
+  const tableWidth: number = calcTableWidth(
+    234,
+    71,
+    props.memList.length,
+    props.innerWidth
+  );
+  const tableStyle = { width: `${tableWidth}px` };
+
   return (
     <div className={styles.detail}>
-      <table>
+      <table style={tableStyle}>
         <DetailHead
           memMat={props.memMat}
           dateArr={props.dateArr}
@@ -190,7 +237,7 @@ function DetailTable(props: {
   );
 }
 
-export function Schedule() {
+export function Schedule(props: { innerWidth: number }) {
   const memMat = useAppSelector(selectMemMat);
   const dateArr = useAppSelector(selectDateArr);
   const memList = useAppSelector(selectMemList);
@@ -206,9 +253,14 @@ export function Schedule() {
     <div>
       <h2>選んだ日程… {selectedDates.join('、')}</h2>
       <h3>合計</h3>
-      <SummaryTable memMat={memMat} dateArr={dateArr} memList={memList} />
+      <SummaryTable
+        memMat={memMat}
+        dateArr={dateArr}
+        memList={memList}
+        innerWidth={props.innerWidth}
+      />
       <label htmlFor={styles.toggleDetail}>
-        <h3>詳細▼</h3>
+        <h3>詳細 {showDetail ? '▲' : '▼'}</h3>
         <input
           type="checkbox"
           id={styles.toggleDetail}
@@ -221,6 +273,7 @@ export function Schedule() {
           dateArr={dateArr}
           memList={memList}
           allDateList={allDateList}
+          innerWidth={props.innerWidth}
         />
       )}
     </div>

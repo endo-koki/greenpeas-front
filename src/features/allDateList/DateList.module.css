@@ -17,17 +17,12 @@ h3 {
   border: 1px solid black;
   margin: 5px;
   display: flex;
-  /* width: 100px;
-  overflow-x: scroll; */
-}
-
-.allDates table {
-  width: 100% - 10px;
 }
 
 .summary thead,
 .detail thead {
   display: flex;
+  background-color: rgb(178, 252, 178);
 }
 
 .allDates tbody,
@@ -43,7 +38,7 @@ h3 {
 .summary td,
 .detail th,
 .detail td {
-  width: 50px;
+  /* width: 50px; */
   overflow: hidden;
   display: block;
   border: 0.5px solid black;
@@ -62,17 +57,44 @@ h3 {
 .allDates tbody th {
   font-size: 80%;
 }
+.allDates tbody th,
+.allDates tbody td {
+  width: 50px;
+}
 
+/* ok */
 .summary tbody th,
-.summary tbody td,
+.summary tbody td {
+  width: 60px;
+}
 .detail tbody th,
 .detail tbody td {
   width: 60px;
+  height: 20px;
 }
 
 .detail thead tr:nth-child(1) th {
-  width: 150px;
-  font-size: 100%;
+  width: 100px;
+  /* font-size: 50%; */
+  overflow: hidden;
+}
+.detail thead th {
+  height: 20px;
+}
+
+.markerCol {
+  width: 30px;
+}
+
+.dateInfo {
+  position: absolute;
+  font-size: 12px;
+  border: 1px solid black;
+  border-radius: 3px;
+  color: #565656;
+  background-color: rgb(255, 254, 213);
+  padding: 3px;
+  line-height: 1.5;
 }
 
 .selected {

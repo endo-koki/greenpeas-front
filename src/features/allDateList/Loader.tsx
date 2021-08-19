@@ -12,6 +12,23 @@ function csvToRawMat(csv: string): string[][] {
   return csvMat;
 }
 
+function transposeMat<T>(mat: T[][]): T[][] {
+  if (mat.length === 0) {
+    return [];
+  }
+  const matT: T[][] = new Array(mat[0].length).fill([]);
+  mat.forEach((vec) => {
+    vec.forEach((x, idx) => matT[idx].push(x));
+  });
+  return matT;
+}
+
+function sortRawMat(rawMat: string[][]): string[][] {
+  const transposed: string[][] = transposeMat(rawMat);
+  transposed.sort((a, b) => (a[0] <= b[0] ? -1 : 1));
+  return transposeMat(transposed);
+}
+
 async function load(url: string): Promise<string[][]> {
   const urlHead: string = 'https://chouseisan.com/s?h=';
   if (!url.startsWith(urlHead)) {
@@ -48,8 +65,10 @@ export function Loader() {
     const decoder = new TextDecoder('shift_jis');
     const csv = decoder.decode(buf);
     const rawMat: string[][] = csvToRawMat(csv);
+    console.log('start sort');
+    const sortedMat: string[][] = rawMat; // sortRawMat(rawMat);
 
-    dispatch(setData(rawMat));
+    dispatch(setData(sortedMat));
   }
 
   return (
