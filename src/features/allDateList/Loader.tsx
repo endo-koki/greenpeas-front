@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { setData } from './allDateSlice';
 import styles from './Loader.module.css';
+import { sort2d } from '../../utils';
 
 function csvToRawMat(csv: string): string[][] {
   const csvVecs: string[] = csv.split(',\n');
@@ -65,8 +66,8 @@ export function Loader() {
     const decoder = new TextDecoder('shift_jis');
     const csv = decoder.decode(buf);
     const rawMat: string[][] = csvToRawMat(csv);
-    console.log('start sort');
-    const sortedMat: string[][] = rawMat; // sortRawMat(rawMat);
+    const compareFn = (a: string, b: string) => (a <= b ? -1 : 1);
+    const sortedMat: string[][] = sort2d(rawMat, compareFn, 0, 1);
 
     dispatch(setData(sortedMat));
   }

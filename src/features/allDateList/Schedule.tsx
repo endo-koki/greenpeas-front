@@ -10,10 +10,13 @@ import {
 } from './allDateSlice';
 import { calcTableWidth } from './AllDateList';
 import styles from './DateList.module.css';
+import { uuKey } from '../../utils';
 
 function SummaryHead(props: { okNum: number; qNum: number; ngNum: number }) {
   const headItems1 = ['○', '△', '×'].map((val) => (
-    <th className={styles.markerCol}>{val}</th>
+    <th key={uuKey()} className={styles.markerCol}>
+      {val}
+    </th>
   ));
   return (
     <thead>
@@ -39,7 +42,7 @@ function SummaryBody(props: {
   const rowList = [];
   for (let i = 0; i < props.memList.length; i++) {
     const rowItem = (
-      <tr>
+      <tr key={uuKey()}>
         <th className={styles.headRow}>{props.memList[i]}</th>
         <td>{props.okVec[i]}</td>
         <td>{props.qVec[i]}</td>
@@ -135,25 +138,47 @@ function DetailHead(props: {
     return `${ratio.toFixed(2)}%`;
   };
 
-  const headItems = [<th className={styles.headRow}> </th>];
+  const headItems = [
+    <th key={uuKey()} className={styles.headRow}>
+      {' '}
+    </th>,
+  ];
   const okItems = [
-    <th className={`${styles.headRow} ${styles.markerCol}`}>○</th>,
+    <th key={uuKey()} className={`${styles.headRow} ${styles.markerCol}`}>
+      ○
+    </th>,
   ];
   const qItems = [
-    <th className={`${styles.headRow} ${styles.markerCol}`}>△</th>,
+    <th key={uuKey()} className={`${styles.headRow} ${styles.markerCol}`}>
+      △
+    </th>,
   ];
   const ngItems = [
-    <th className={`${styles.headRow} ${styles.markerCol}`}>×</th>,
+    <th key={uuKey()} className={`${styles.headRow} ${styles.markerCol}`}>
+      ×
+    </th>,
   ];
   for (let i = 0; i < selectedDates.length; i++) {
     const style = { fontSize: calcFontSize(selectedDates[i]) };
-    headItems.push(<th style={style}>{selectedDates[i]}</th>);
-    okItems.push(
-      <th>{selectedVecs[i].filter((val) => val === '○').length}</th>
+    headItems.push(
+      <th key={uuKey()} style={style}>
+        {selectedDates[i]}
+      </th>
     );
-    qItems.push(<th>{selectedVecs[i].filter((val) => val === '△').length}</th>);
+    okItems.push(
+      <th key={uuKey()}>
+        {selectedVecs[i].filter((val) => val === '○').length}
+      </th>
+    );
+    qItems.push(
+      <th key={uuKey()}>
+        {selectedVecs[i].filter((val) => val === '△').length}
+      </th>
+    );
     ngItems.push(
-      <th>{selectedVecs[i].filter((val) => val === '×').length}</th>
+      <th key={uuKey()}>
+        {selectedVecs[i].filter((val) => val === '×').length}
+      </th>
     );
   }
 
@@ -172,10 +197,14 @@ function DetailBodyCol(props: {
   name: string;
   selectedVecs: string[][];
 }) {
-  const items = [<th className={styles.headRow}>{props.name}</th>];
+  const items = [
+    <th key={uuKey()} className={styles.headRow}>
+      {props.name}
+    </th>,
+  ];
   for (let i = 0; i < props.selectedVecs.length; i++) {
     const state: string = props.selectedVecs[i][props.jdx];
-    items.push(<td>{state}</td>);
+    items.push(<td key={uuKey()}>{state}</td>);
   }
   return <tr>{items}</tr>;
 }
@@ -194,6 +223,7 @@ function DetailBody(props: {
   for (let jdx = 0; jdx < props.memList.length; jdx++) {
     colItems.push(
       <DetailBodyCol
+        key={String(jdx)}
         jdx={jdx}
         name={props.memList[jdx]}
         selectedVecs={selectedVecs}
