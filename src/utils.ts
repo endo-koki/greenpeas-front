@@ -1,3 +1,17 @@
+// global var
+export const margin: number = 10;
+
+/** calculate table width. (table width = cell width + border width * 2) */
+export function calcTableWidth(
+  headWidth: number,
+  cellWidth: number,
+  cellNum: number,
+  innerWidth: number
+): number {
+  const width: number = headWidth + cellWidth * cellNum;
+  return Math.min(width, innerWidth * 0.8 - 2 * margin);
+}
+
 /** unique key */
 function* incremental(step: number): Generator<number> {
   let i: number = 0;
@@ -80,4 +94,40 @@ export function sort2d<T>(
 ): T[][] {
   const sortFn = axis === 0 ? sort2dByRow : sort2dByCol;
   return sortFn(mat, compareFn, baseIdx);
+}
+
+/** lessThanの基準で小さいもの上位k個を保持するlist (同列があっても上位k個だけ) */
+export class TopKList<T> {
+  private arr: (T | null)[]; // 小さい順
+  private lessThan: (a: T, b: T) => boolean;
+
+  constructor(k: number, lessThanFunc: (a: T, b: T) => boolean) {
+    this.arr = new Array(k).fill(null);
+    this.lessThan = lessThanFunc;
+  }
+
+  get lastItem(): T | null {
+    return this.arr[this.arr.length - 1];
+  }
+
+  get list(): T[] {
+    return this.arr.filter((val) => val !== null) as T[];
+  }
+
+  /** Inserts an item considering order. Returns true if the item was inserted. */
+  insert(item: T): boolean {
+    for (let i = 0; i < this.arr.length; i++) {
+      const curItem: T | null = this.arr[i];
+      if (curItem === null) {
+        this.arr[i] = item;
+        return true;
+      }
+      if (this.lessThan(item, curItem)) {
+        this.arr.splice(i, 0, item);
+        this.arr.pop();
+        return true;
+      }
+    }
+    return false;
+  }
 }

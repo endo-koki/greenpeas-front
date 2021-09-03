@@ -1,33 +1,23 @@
 import React, { useState } from 'react';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { calcTableWidth } from '../../utils';
 import {
   includeDate,
   excludeDate,
   selectMemMat,
   selectDateArr,
   selectAllDateList,
-  dateState,
+  DateState,
   selectMemList,
 } from './allDateSlice';
 import styles from './DateList.module.css';
-
-/** calculate table width. (table width = cell width + border width * 2) */
-export function calcTableWidth(
-  headWidth: number,
-  cellWidth: number,
-  cellNum: number,
-  innerWidth: number
-): number {
-  const width: number = headWidth + cellWidth * cellNum;
-  return Math.min(width, innerWidth - 10);
-}
 
 function DateColumn(props: {
   idx: number;
   memVec: string[];
   memList: string[];
   date: string;
-  state: dateState;
+  state: DateState;
   innerWidth: number;
 }) {
   const dispatch = useAppDispatch();
@@ -52,10 +42,7 @@ function DateColumn(props: {
   const [mousePos, setMousePos] = useState([0, 0]);
   function handleMouseMove(e: React.MouseEvent) {
     setShowInfo(true);
-    const pos: [number, number] = [
-      e.nativeEvent.clientX,
-      e.nativeEvent.clientY,
-    ];
+    const pos: [number, number] = [e.nativeEvent.pageX, e.nativeEvent.pageY];
     setMousePos(pos);
   }
   let infoStyle;
@@ -65,6 +52,7 @@ function DateColumn(props: {
       top: `${mousePos[1] + 10}px`,
     };
   } else {
+    // 不要説
     infoStyle = {
       right: `${props.innerWidth - mousePos[0] + 10}px`,
       top: `${mousePos[1] + 10}px`,

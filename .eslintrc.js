@@ -35,6 +35,12 @@ module.exports = {
     'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
     'react/destructuring-assignment': ['error', 'never'],
     'no-unused-vars': 'off',
+    'lines-between-class-members': [
+      'error',
+      'always',
+      { exceptAfterSingleLine: true },
+    ],
+    'no-continue': 'off',
   },
   settings: {
     'import/resolver': {

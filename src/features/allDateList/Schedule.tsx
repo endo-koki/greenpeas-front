@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import stringWidth from 'string-width';
 import { useAppSelector } from '../../app/hooks';
 import {
-  dateState,
+  DateState,
   selectMemMat,
   selectDateArr,
   selectMemList,
   selectAllDateList,
 } from './allDateSlice';
-import { calcTableWidth } from './AllDateList';
+import { calcTableWidth, uuKey } from '../../utils';
 import styles from './DateList.module.css';
-import { uuKey } from '../../utils';
 
 function SummaryHead(props: { okNum: number; qNum: number; ngNum: number }) {
   const headItems1 = ['○', '△', '×'].map((val) => (
@@ -57,7 +56,7 @@ function SummaryBody(props: {
 
 function SummaryTable(props: {
   memMat: string[][];
-  dateArr: dateState[];
+  dateArr: DateState[];
   memList: string[];
   innerWidth: number;
 }) {
@@ -114,11 +113,11 @@ function SummaryTable(props: {
 
 function DetailHead(props: {
   memMat: string[][];
-  dateArr: dateState[];
+  dateArr: DateState[];
   allDateList: string[];
 }) {
   const isSelected = (idx: number) => {
-    const state: dateState = props.dateArr[idx];
+    const state: DateState = props.dateArr[idx];
     return state === 1 || state === 2;
   };
   const selectedDates: string[] = props.allDateList.filter((_, idx) =>
@@ -210,11 +209,11 @@ function DetailBodyCol(props: {
 }
 function DetailBody(props: {
   memMat: string[][];
-  dateArr: dateState[];
+  dateArr: DateState[];
   memList: string[];
 }) {
   const isSelected = (val: any, idx: number) => {
-    const state: dateState = props.dateArr[idx];
+    const state: DateState = props.dateArr[idx];
     return state === 1 || state === 2;
   };
   const selectedVecs: string[][] = props.memMat.filter(isSelected);
@@ -236,7 +235,7 @@ function DetailBody(props: {
 
 function DetailTable(props: {
   memMat: string[][];
-  dateArr: dateState[];
+  dateArr: DateState[];
   memList: string[];
   allDateList: string[];
   innerWidth: number;
@@ -290,7 +289,7 @@ export function Schedule(props: { innerWidth: number }) {
         innerWidth={props.innerWidth}
       />
       <label htmlFor={styles.toggleDetail}>
-        <h3>詳細 {showDetail ? '▲' : '▼'}</h3>
+        <h3 className={styles.detailTitle}>詳細 {showDetail ? '▲' : '▼'}</h3>
         <input
           type="checkbox"
           id={styles.toggleDetail}

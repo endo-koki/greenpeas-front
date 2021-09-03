@@ -1,5 +1,5 @@
 .loader {
-  margin: 5px;
+  margin: var(--margin);
 }
 
 .urlInput {

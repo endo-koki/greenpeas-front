@@ -5,6 +5,7 @@ import { AllDateList } from './features/allDateList/AllDateList';
 import { Schedule } from './features/allDateList/Schedule';
 import { selectMemMat } from './features/allDateList/allDateSlice';
 import './App.css';
+import { Sidebar } from './features/sideBar/Sidebar';
 
 function App() {
   const memMat: string[][] = useSelector(selectMemMat);
@@ -21,10 +22,21 @@ function App() {
 
   return (
     <div className="App">
-      <h1>M練日程自動調整ツール</h1>
-      <Loader />
-      {showDate && <AllDateList innerWidth={innerWidth} />}
-      {showDate && <Schedule innerWidth={innerWidth} />}
+      <header>
+        <h1>M練日程自動調整ツール</h1>
+      </header>
+      <div id="contents">
+        <main id="main">
+          <Loader />
+          {showDate && <AllDateList innerWidth={innerWidth} />}
+          {showDate && <Schedule innerWidth={innerWidth} />}
+        </main>
+        <aside id="aside">
+          <div id="sidebar-container">
+            <Sidebar />
+          </div>
+        </aside>
+      </div>
     </div>
   );
 }

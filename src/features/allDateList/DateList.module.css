@@ -1,7 +1,7 @@
 h2,
 h3 {
   text-align: left;
-  margin: 5px;
+  margin: var(--margin);
 }
 
 /* allDateList */
@@ -15,7 +15,7 @@ h3 {
 .detail table {
   border-collapse: collapse;
   border: 1px solid black;
-  margin: 5px;
+  margin: var(--margin);
   display: flex;
 }
 
@@ -61,6 +61,9 @@ h3 {
 .allDates tbody td {
   width: 50px;
 }
+.allDates tbody:hover {
+  cursor: pointer;
+}
 
 /* ok */
 .summary tbody th,
@@ -95,6 +98,7 @@ h3 {
   background-color: rgb(255, 254, 213);
   padding: 3px;
   line-height: 1.5;
+  z-index: 1;
 }
 
 .selected {
@@ -135,6 +139,9 @@ h3 {
   padding: 5px;
 } */
 
+.detailTitle:hover {
+  cursor: pointer;
+}
 #toggleDetail {
   display: none;
 }
