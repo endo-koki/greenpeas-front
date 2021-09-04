@@ -25,16 +25,14 @@ function App() {
       <header>
         <h1>M練日程自動調整ツール</h1>
       </header>
-      <div id="contents">
+      <div className="content-box">
         <main id="main">
           <Loader />
           {showDate && <AllDateList innerWidth={innerWidth} />}
           {showDate && <Schedule innerWidth={innerWidth} />}
         </main>
         <aside id="aside">
-          <div id="sidebar-container">
-            <Sidebar />
-          </div>
+          <Sidebar />
         </aside>
       </div>
     </div>

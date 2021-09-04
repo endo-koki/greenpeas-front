@@ -5,12 +5,19 @@
 
 header {
   text-align: center;
-  height: 50px;
+  width: 100vw;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  background-color: #35a219;
+}
+header h1 {
+  height: 40px;
+  margin: calc(2 * var(--margin));
 }
 
-#contents {
-  display: flex;
-  justify-content: space-between;
+.content-box {
+  margin-top: 80px;
 }
 
 #main {
@@ -19,12 +26,10 @@ header {
 
 #aside {
   width: 20%;
-  background-color: aquamarine;
-  border-radius: var(--border-rad);
-}
-
-#sidebar-container {
-  position: sticky;
-  top: var(--margin);
   height: calc(100vh - var(--margin));
+  position: fixed;
+  top: 80px;
+  left: 80vw;
+  background-color: aquamarine;
+  border-radius: var(--border-rad) 0 0 var(--border-rad);
 }
