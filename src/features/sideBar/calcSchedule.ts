@@ -1,4 +1,4 @@
-import { TopKList } from '../../utils';
+import { argsort, TopKList } from '../../utils';
 
 const MARU = 1;
 const SANKAKU = 0.2;
@@ -178,19 +178,33 @@ export function findOptScheduleWithPref(
     })
   );
 
-  function reduceAndMapMat(
+  function reduceMat(
     mat: Answer[][],
     removeIdxs: number[]
-  ): [Answer[][], number[]] {
+  ): [reducedMat: Answer[][], maps1: number[]] {
     const reducedMat: Answer[][] = [];
-    const maps: number[] = []; // reducedMat -> memMat のmapping
+    const maps1: number[] = []; // reducedMat -> memMat のmapping
     for (let i = 0; i < mat.length; i++) {
       const memVec: Answer[] = mat[i];
       if (removeIdxs.includes(i)) continue; // 除外対象
       reducedMat.push(memVec);
-      maps.push(i);
+      maps1.push(i);
     }
-    return [reducedMat, maps];
+    return [reducedMat, maps1];
+  }
+
+  /** 参加人数が少ない順にソート */
+  function sortMat(
+    reducedMat: Answer[][]
+  ): [sortedMat: Answer[][], maps2: number[]] {
+    const attendCnts: number[] = reducedMat.map((memVec) =>
+      (memVec as number[]).reduce((a, b) => a + b)
+    );
+    const maps2: number[] = argsort(attendCnts, (a, b) => a - b);
+    const sortedMat: Answer[][] = [];
+    maps2.forEach((idx) => sortedMat.push(reducedMat[idx]));
+
+    return [sortedMat, maps2];
   }
 
   const memNum: number = resMat[0].length;
@@ -202,17 +216,20 @@ export function findOptScheduleWithPref(
     });
   });
 
-  const [reducedMat, matMaps] = reduceAndMapMat(
+  const [reducedMat, maps1] = reduceMat(
     resMat,
     includeIdxs.concat(excludeIdxs)
   );
+  const [sortedMat, maps2] = sortMat(reducedMat);
 
-  const totalDateNum: number = reducedMat.length;
+  const matMaps: number[] = maps2.map((idx) => maps1[idx]); // maps[i] = maps1[maps2[i]]
+
+  const totalDateNum: number = sortedMat.length;
   const rootNode: ScheduleNode = new ScheduleNode(totalDateNum, memNum);
   rootNode.init(attendCnts);
 
   const topList: ScheduleNode[] = findOptSchedule(
-    reducedMat,
+    sortedMat,
     maxDateNum - includeIdxs.length,
     minAttendNum,
     candNum,
