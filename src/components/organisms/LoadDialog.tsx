@@ -68,7 +68,7 @@ export function LoadDialog(props: Props) {
       setFile(null);
     } else {
       setFile(e.target.files[0]);
-      loadLocalCsv(file as File);
+      loadLocalCsv(e.target.files[0]);
     }
   }
 
