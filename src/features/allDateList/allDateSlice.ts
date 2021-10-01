@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from '../../app/store';
 
-/** 0: default, 1: selected, 2: suggested, 3: excluded */
-export type DateState = 0 | 1 | 2 | 3;
+/** -1: suggested, 0: included, 1: excluded, 2: default */
+export type DateState = -1 | 0 | 1 | 2;
 export interface allDateState {
   memMat: string[][];
   dateArr: DateState[];
@@ -36,18 +36,24 @@ export const allDateSlice = createSlice({
       state.memMat = memMat;
       state.memList = rawMat[0].slice(1);
       state.allDateList = allDateList;
-      state.dateArr = new Array(allDateList.length).fill(0);
+      state.dateArr = new Array(allDateList.length).fill(2);
     },
     /** idx をもらってその idx の dateArr 要素を select/deselect */
     includeDate: (state, action: PayloadAction<number>) => {
       const idx: number = action.payload;
       const currentValue: DateState = state.dateArr[idx];
-      state.dateArr[idx] = currentValue === 1 ? 0 : 1;
+      state.dateArr[idx] = currentValue === 0 ? 2 : 0;
     },
     excludeDate: (state, action: PayloadAction<number>) => {
       const idx: number = action.payload;
       const currentValue: DateState = state.dateArr[idx];
-      state.dateArr[idx] = currentValue === 3 ? 0 : 3;
+      state.dateArr[idx] = currentValue === 1 ? 2 : 1;
+    },
+    /** idxのdateStateをincluded→excluded→default→…と変化させる */
+    switchDate: (state, action: PayloadAction<number>) => {
+      const idx: number = action.payload;
+      const currentValue: DateState = state.dateArr[idx];
+      state.dateArr[idx] = ((currentValue + 1) % 3) as DateState;
     },
     suggestDate: (state, action: PayloadAction<number>) => {
       const idx: number = action.payload;
@@ -70,6 +76,7 @@ export const {
   setData,
   includeDate,
   excludeDate,
+  switchDate,
   suggestDate,
   clearSuggestion,
 } = allDateSlice.actions;

@@ -52,9 +52,9 @@ export function Sidebar() {
     const includeIdxs: number[] = [];
     const excludeIdxs: number[] = [];
     dateArr.forEach((val, idx) => {
-      if (val === 1) {
+      if (val === 0) {
         includeIdxs.push(idx);
-      } else if (val === 3) {
+      } else if (val === 1) {
         excludeIdxs.push(idx);
       }
     });

@@ -19,6 +19,7 @@ import {
   selectMemMat,
 } from '../../features/allDateList/allDateSlice';
 import { useAppSelector } from '../../app/hooks';
+import { DateCell } from '../atom/DateCell';
 
 const classes = {
   table: css({
@@ -59,10 +60,8 @@ function marker2Icon(marker: Marker) {
 
 function AllDateHead() {
   const allDateList = useAppSelector(selectAllDateList);
-  const tableCells = allDateList.map((date) => (
-    <TableCell key={uuKey()} align="center">
-      {date}
-    </TableCell>
+  const tableCells = allDateList.map((date, idx) => (
+    <DateCell key={uuKey()} content={date} idx={idx} />
   ));
 
   return (
@@ -83,13 +82,9 @@ function AllDateHead() {
 
 function AllDateRow(props: { marker: Marker }) {
   const memMat = useAppSelector(selectMemMat);
-  const items = memMat.map((memVec) => {
+  const items = memMat.map((memVec, idx) => {
     const memCount = memVec.filter((m) => m === props.marker).length;
-    return (
-      <TableCell key={uuKey()} align="center">
-        {memCount}
-      </TableCell>
-    );
+    return <DateCell key={uuKey()} content={memCount} idx={idx} />;
   });
 
   return (
