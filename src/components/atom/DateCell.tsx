@@ -1,3 +1,6 @@
+/* eslint-disable react/react-in-jsx-scope -- Unaware of jsxImportSource */
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 import React, { useState } from 'react';
 import TableCell from '@mui/material/TableCell';
 import { green, grey } from '@mui/material/colors';
@@ -9,6 +12,12 @@ import {
 import { DateInfo } from '../molecules/DateInfo';
 
 const colors: string[] = [green[300], green[400], grey[700], ''];
+
+const classes = {
+  cell: css({
+    cursor: 'pointer',
+  }),
+};
 
 export function DateCell(props: { content: string | number; idx: number }) {
   const dispatch = useAppDispatch();
@@ -32,6 +41,7 @@ export function DateCell(props: { content: string | number; idx: number }) {
         // onMouseLeave={() => dispatch(setInfoIdx(-1))}
         onMouseMove={handleMouseMove}
         onMouseLeave={() => setShowInfo(false)}
+        css={classes.cell}
         sx={{ backgroundColor: color }}
       >
         {props.content}

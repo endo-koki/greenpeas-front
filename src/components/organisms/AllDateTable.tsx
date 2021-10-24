@@ -9,10 +9,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import React from 'react';
-import ClearIcon from '@mui/icons-material/Clear';
-import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
-import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { uuKey } from '../../utils';
 import {
   selectAllDateList,
@@ -20,6 +16,7 @@ import {
 } from '../../features/allDateList/allDateSlice';
 import { useAppSelector } from '../../app/hooks';
 import { DateCell } from '../atom/DateCell';
+import { Marker, marker2Icon, markers } from '../atom/marker';
 
 const classes = {
   table: css({
@@ -42,21 +39,6 @@ const classes = {
     borderRight: '1px solid #dfdfdf',
   }),
 };
-
-type Marker = '○' | '△' | '×';
-const markers: Marker[] = ['○', '△', '×'];
-function marker2Icon(marker: Marker) {
-  switch (marker) {
-    case '○':
-      return <CircleOutlinedIcon />;
-    case '△':
-      return <ChangeHistoryIcon />;
-    case '×':
-      return <ClearIcon />;
-    default:
-      return <HelpOutlineIcon />;
-  }
-}
 
 function AllDateHead() {
   const allDateList = useAppSelector(selectAllDateList);
@@ -112,7 +94,11 @@ export function AllDateTable() {
   return (
     <TableContainer
       component={Paper}
-      sx={{ borderRadius: '10px', width: 'calc(100% - 16px)' }}
+      sx={{
+        borderRadius: '10px',
+        width: 'calc(100% - 16px)',
+        overflowX: 'scroll',
+      }}
     >
       <Table aria-label="all date table" css={classes.table}>
         <AllDateHead />

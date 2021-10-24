@@ -32,7 +32,7 @@ export function MainPage() {
         onOpenLoader={() => setOpenLoader(true)}
       />
 
-      <div>
+      <div style={{ overflowX: 'hidden' }}>
         <DrawerHeader />
         {/* empty header */}
 

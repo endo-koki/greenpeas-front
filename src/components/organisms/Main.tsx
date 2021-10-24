@@ -5,6 +5,8 @@ import { green } from '@mui/material/colors';
 import Typography from '@mui/material/Typography';
 import React from 'react';
 import { AllDateTable } from './AllDateTable';
+import { DetailTable } from './DetailTable';
+import { SummaryTable } from './SummaryTable';
 
 const classes = {
   closed: css({
@@ -29,6 +31,14 @@ export function Main(props: { open: boolean }) {
           日程リスト
         </Typography>
         <AllDateTable />
+        <Typography variant="h6" component="h2" sx={{ marginTop: '16px' }}>
+          各メンバーの参加数
+        </Typography>
+        <SummaryTable />
+        <Typography variant="h6" component="h2" sx={{ marginTop: '16px' }}>
+          選んだ日程
+        </Typography>
+        <DetailTable />
       </div>
       {/* <AllDateTable2 /> */}
       {/* <AllDateTable3 /> */}
