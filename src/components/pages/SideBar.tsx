@@ -11,14 +11,6 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Typography from '@mui/material/Typography';
 import { SidebarContent } from '../organisms/SidebarContent';
 
-// const useStyles = makeStyles({
-//   side: {
-//     backgroundColor: green[100],
-//     width: '100vw',
-//     height: 'calc(100vh - 65px)',
-//   },
-// });
-
 const classes = {
   closeBtn: css({
     color: 'white',
@@ -63,7 +55,7 @@ export function SideBar(props: Props) {
       </DrawerHeader>
       <Paper
         sx={{
-          width: '25vw',
+          width: '20vw',
           height: 'calc(100vh - 65px)',
           backgroundColor: green[100],
           borderRadius: 0,

@@ -96,7 +96,7 @@ export function AllDateTable() {
       component={Paper}
       sx={{
         borderRadius: '10px',
-        width: 'calc(100% - 16px)',
+        width: 'calc(100% - 32px)',
         overflowX: 'scroll',
       }}
     >

@@ -143,7 +143,7 @@ export function DetailTable() {
   return (
     <TableContainer
       component={Paper}
-      sx={{ borderRadius: '10px', width: 'calc(100% - 16px)' }}
+      sx={{ borderRadius: '10px', width: 'calc(100% - 32px)' }}
     >
       <Table aria-label="detail table" css={classes.table}>
         <DetailHead />

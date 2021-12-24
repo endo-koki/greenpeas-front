@@ -15,8 +15,13 @@ import { ScheduleList } from '../../features/sideBar/calcSchedule';
 import { uuKey } from '../../utils';
 
 const classes = {
+  noResult: css({
+    width: '16vw',
+    margin: '16px auto',
+    textAlign: 'center',
+  }),
   sugPaper: css({
-    width: '20vw',
+    width: '16vw',
     backgroundColor: green[100],
     margin: '8px auto',
     padding: '8px',
@@ -59,32 +64,8 @@ function SugPaper(props: { sug: ScheduleList }) {
 export function SugList(props: { sugs: ScheduleList[]; computed: boolean }) {
   const noResult = props.computed && props.sugs.length === 0;
   const cands = noResult
-    ? [<Typography>候補なし</Typography>]
+    ? [<Typography css={classes.noResult}>候補なし</Typography>]
     : props.sugs.map((sug) => <SugPaper key={uuKey()} sug={sug} />);
 
   return <div css={classes.sugList}>{cands}</div>;
 }
-
-// export function SugList(props: { sugs: ScheduleList[]; computed: boolean }) {
-//   const noResult = props.computed && props.sugs.length === 0;
-//   const cands = noResult
-//     ? [<Typography>候補なし</Typography>]
-//     : props.sugs.map((sug) => <SugPaper sug={sug} />);
-//   const items = cands.map((cand) => (
-//     <Grid item key={uuKey()}>
-//       {cand}
-//     </Grid>
-//   ));
-//   return (
-//     <Grid
-//       container
-//       direction="column"
-//       justifyContent="flex-start"
-//       alignItems="center"
-//       spacing={2}
-//       sx={{ maxHeight: 'calc(100vh - 221.5px)', overflowY: 'scroll' }}
-//     >
-//       {items}
-//     </Grid>
-//   );
-// }

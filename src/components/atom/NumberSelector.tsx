@@ -3,14 +3,14 @@
 import { css } from '@emotion/react';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
-import React, { useState } from 'react';
+import React from 'react';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import Typography from '@mui/material/Typography';
 
 const classes = {
   input: css({
-    width: '25vw',
+    width: '20vw',
   }),
 };
 
