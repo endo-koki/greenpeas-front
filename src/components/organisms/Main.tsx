@@ -40,8 +40,6 @@ export function Main(props: { open: boolean }) {
         </Typography>
         <DetailTable />
       </div>
-      {/* <AllDateTable2 /> */}
-      {/* <AllDateTable3 /> */}
     </>
   );
 }

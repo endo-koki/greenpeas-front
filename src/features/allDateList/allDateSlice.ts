@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState, AppThunk } from '../../app/store';
+import { RootState } from '../../app/store';
 
 /** -1: suggested, 0: included, 1: excluded, 2: default */
 export type DateState = -1 | 0 | 1 | 2;
@@ -58,12 +58,14 @@ export const allDateSlice = createSlice({
     suggestDate: (state, action: PayloadAction<number>) => {
       const idx: number = action.payload;
       const currentValue: DateState = state.dateArr[idx];
-      state.dateArr[idx] = currentValue === 1 ? 1 : 2;
+      if (currentValue === 2) {
+        state.dateArr[idx] = -1;
+      }
     },
     clearSuggestion: (state) => {
       state.dateArr.forEach((val, idx) => {
-        if (val === 2) {
-          state.dateArr[idx] = 0;
+        if (val === -1) {
+          state.dateArr[idx] = 2;
         }
       });
     },

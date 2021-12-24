@@ -9,6 +9,7 @@ import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Typography from '@mui/material/Typography';
+import { SidebarContent } from '../organisms/SidebarContent';
 
 // const useStyles = makeStyles({
 //   side: {
@@ -66,9 +67,10 @@ export function SideBar(props: Props) {
           height: 'calc(100vh - 65px)',
           backgroundColor: green[100],
           borderRadius: 0,
+          overflowY: 'hidden',
         }}
       >
-        suggestion
+        <SidebarContent />
       </Paper>
     </Drawer>
   );

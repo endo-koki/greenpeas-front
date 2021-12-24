@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
-import { DrawerHeader, SideBar } from '../organisms/SideBar';
+import { DrawerHeader, SideBar } from './SideBar';
 import { TopBar } from '../organisms/TopBar';
 import { Main } from '../organisms/Main';
 import { LoadDialog } from '../organisms/LoadDialog';

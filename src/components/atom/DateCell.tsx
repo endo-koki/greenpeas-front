@@ -11,7 +11,7 @@ import {
 } from '../../features/allDateList/allDateSlice';
 import { DateInfo } from '../molecules/DateInfo';
 
-const colors: string[] = [green[300], green[400], grey[700], ''];
+const colors: string[] = [green[200], green[400], grey[700], ''];
 
 const classes = {
   cell: css({
