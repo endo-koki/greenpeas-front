@@ -33,12 +33,12 @@ const classes = {
   }),
 };
 
-type Props = {
+export function TopBar(props: {
   openDrawer: boolean;
   setOpenDrawer: React.Dispatch<React.SetStateAction<boolean>>;
   onOpenLoader: () => void;
-};
-export function TopBar(props: Props) {
+  onOpenExporter: () => void;
+}) {
   function handleBtnClick() {
     props.setOpenDrawer(!props.openDrawer);
   }
@@ -59,6 +59,15 @@ export function TopBar(props: Props) {
               css={classes.loadBtn}
             >
               csvファイルを読込
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              variant="outlined"
+              onClick={props.onOpenExporter}
+              css={classes.loadBtn}
+            >
+              調整結果をエクスポート
             </Button>
           </Grid>
           <Grid item sx={{ flexGrow: 1 }} />

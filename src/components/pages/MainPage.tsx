@@ -4,10 +4,12 @@ import { DrawerHeader, SideBar } from './SideBar';
 import { TopBar } from '../organisms/TopBar';
 import { Main } from '../organisms/Main';
 import { LoadDialog } from '../organisms/LoadDialog';
+import { ExportDialog } from '../organisms/ExportDialog';
 
 export function MainPage() {
   const [openDrawer, setOpenDrawer] = useState(true);
   const [openLoader, setOpenLoader] = useState(false);
+  const [openExporter, setOpenExporter] = useState(false);
 
   return (
     <Box>
@@ -15,6 +17,7 @@ export function MainPage() {
         openDrawer={openDrawer}
         setOpenDrawer={setOpenDrawer}
         onOpenLoader={() => setOpenLoader(true)}
+        onOpenExporter={() => setOpenExporter(true)}
       />
 
       <div style={{ overflowX: 'hidden' }}>
@@ -29,6 +32,11 @@ export function MainPage() {
       <LoadDialog
         openDialog={openLoader}
         onClose={() => setOpenLoader(false)}
+      />
+
+      <ExportDialog
+        openDialog={openExporter}
+        onClose={() => setOpenExporter(false)}
       />
     </Box>
   );
