@@ -1,44 +1,17 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
+# リハスケ - 複数練習日程調整ツール
 
-## Available Scripts
+[調整さん](https://chouseisan.com)で作った出欠表から良さそうな練習日程を複数決めるのに役立つツールです。
 
-In the project directory, you can run:
+## 使い方
 
-### `yarn start`
+1. csv ファイルを読み込む。
+   - 調整さんで作った出欠表から csv ファイルをダウンロードし、このアプリにダウンロード。
+   - csv ファイルをまだダウンロードしていない場合は調整さんの URL を入力することでダウンロードできます。
+2. 右のサイドバーで合計練習回数と各メンバーの最低参加回数を指定して「計算する！」をクリック。
+   - コンピュータが良さそうな日程の組み合わせを見つけて提示してくれます。
+3. 提示された候補をクリックして日程を決定します。
+4. 「調整結果をエクスポート」をクリックして、結果をコピーします。
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 注意
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- 現状では日程の組み合わせ候補を全探索しているので、練習回数を増やしすぎると計算に時間がかかります。大体 5, 6 回くらいまでならすぐ計算できたはず。それよりも練習回数が多くなる場合は、調整さんを月毎に作るなどしてもらうと良いと思います。

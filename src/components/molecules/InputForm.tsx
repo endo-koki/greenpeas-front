@@ -53,7 +53,7 @@ export function InputForm(props: {
     >
       <Grid item>
         <NumberSelector
-          text="M練日数"
+          text="練習日数"
           value={maxDateNum}
           setValue={setMaxDateNum}
         />

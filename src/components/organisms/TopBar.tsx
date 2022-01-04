@@ -49,7 +49,7 @@ export function TopBar(props: {
         <Grid container alignItems="center" justifyContent="left" spacing={4}>
           <Grid item>
             <Typography variant="h5" component="h1" css={classes.title}>
-              調整くん
+              Green Peas
             </Typography>
           </Grid>
           <Grid item>

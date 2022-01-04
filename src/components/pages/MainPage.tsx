@@ -8,7 +8,7 @@ import { ExportDialog } from '../organisms/ExportDialog';
 
 export function MainPage() {
   const [openDrawer, setOpenDrawer] = useState(true);
-  const [openLoader, setOpenLoader] = useState(false);
+  const [openLoader, setOpenLoader] = useState(true);
   const [openExporter, setOpenExporter] = useState(false);
 
   return (
