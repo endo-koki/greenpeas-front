@@ -10,8 +10,8 @@ import {
   clearSuggestion,
   selectAllDateList,
   suggestDate,
-} from '../../features/allDateList/allDateSlice';
-import { ScheduleList } from '../../features/sideBar/calcSchedule';
+} from '../../features/allDateSlice';
+import { ScheduleList } from '../../calcSchedule';
 import { uuKey } from '../../utils';
 
 const classes = {

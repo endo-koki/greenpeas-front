@@ -10,10 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import React from 'react';
 import { uuKey } from '../../utils';
-import {
-  selectAllDateList,
-  selectMemMat,
-} from '../../features/allDateList/allDateSlice';
+import { selectAllDateList, selectMemMat } from '../../features/allDateSlice';
 import { useAppSelector } from '../../app/hooks';
 import { DateCell } from '../atom/DateCell';
 import { Marker, marker2Icon, markers } from '../atom/marker';

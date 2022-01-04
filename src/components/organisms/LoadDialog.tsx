@@ -11,7 +11,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Collapse from '@mui/material/Collapse';
 import Input from '@mui/material/Input';
-import { setData } from '../../features/allDateList/allDateSlice';
+import { setData } from '../../features/allDateSlice';
 import { useAppDispatch } from '../../app/hooks';
 import { ContainedBtn } from '../atom/ContainedBtn';
 import { OutlinedBtn } from '../atom/OutlinedBtn';

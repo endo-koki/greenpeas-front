@@ -1,12 +1,8 @@
 import Grid from '@mui/material/Grid';
 import React, { useState } from 'react';
 import { useAppSelector } from '../../app/hooks';
-import { findOptScheduleWithPref } from '../../calcSchedule';
-import {
-  selectDateArr,
-  selectMemMat,
-} from '../../features/allDateList/allDateSlice';
-import { ScheduleList } from '../../features/sideBar/calcSchedule';
+import { findOptScheduleWithPref, ScheduleList } from '../../calcSchedule';
+import { selectDateArr, selectMemMat } from '../../features/allDateSlice';
 import { ContainedBtn } from '../atom/ContainedBtn';
 import { NumberSelector } from '../atom/NumberSelector';
 

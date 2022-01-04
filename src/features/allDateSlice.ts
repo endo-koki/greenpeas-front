@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../../app/store';
+import { RootState } from '../app/store';
 
 /** -1: suggested, 0: included, 1: excluded, 2: default */
 export type DateState = -1 | 0 | 1 | 2;

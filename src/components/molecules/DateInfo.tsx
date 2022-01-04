@@ -9,10 +9,7 @@ import React from 'react';
 import ClearIcon from '@mui/icons-material/Clear';
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
-import {
-  selectMemList,
-  selectMemMat,
-} from '../../features/allDateList/allDateSlice';
+import { selectMemList, selectMemMat } from '../../features/allDateSlice';
 import { useAppSelector } from '../../app/hooks';
 
 const classes = {

@@ -5,10 +5,7 @@ import React, { useState } from 'react';
 import TableCell from '@mui/material/TableCell';
 import { green, grey } from '@mui/material/colors';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import {
-  selectDateArr,
-  switchDate,
-} from '../../features/allDateList/allDateSlice';
+import { selectDateArr, switchDate } from '../../features/allDateSlice';
 import { DateInfo } from '../molecules/DateInfo';
 
 const colors: string[] = [green[200], green[400], grey[700], ''];

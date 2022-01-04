@@ -5,7 +5,7 @@ import { green } from '@mui/material/colors';
 import Typography from '@mui/material/Typography';
 import React from 'react';
 import { useAppSelector } from '../../app/hooks';
-import { selectDateArr } from '../../features/allDateList/allDateSlice';
+import { selectDateArr } from '../../features/allDateSlice';
 import { AllDateTable } from './AllDateTable';
 import { DetailTable } from './DetailTable';
 import { SummaryTable } from './SummaryTable';

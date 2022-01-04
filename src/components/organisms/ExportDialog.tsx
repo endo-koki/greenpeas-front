@@ -18,7 +18,7 @@ import {
   selectDateArr,
   selectMemList,
   selectMemMat,
-} from '../../features/allDateList/allDateSlice';
+} from '../../features/allDateSlice';
 
 const classes = {
   btnOn: css({

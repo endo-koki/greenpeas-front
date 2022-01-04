@@ -1,6 +1,6 @@
 import Divider from '@mui/material/Divider';
 import React, { useState } from 'react';
-import { ScheduleList } from '../../features/sideBar/calcSchedule';
+import { ScheduleList } from '../../calcSchedule';
 import { InputForm } from '../molecules/InputForm';
 import { SugList } from '../molecules/SugList';
 

@@ -15,7 +15,7 @@ import {
   selectDateArr,
   selectMemList,
   selectMemMat,
-} from '../../features/allDateList/allDateSlice';
+} from '../../features/allDateSlice';
 import { uuKey } from '../../utils';
 import { Marker, marker2Icon, markers } from '../atom/marker';
 
