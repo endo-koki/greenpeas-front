@@ -6,13 +6,12 @@ import { SugList } from '../molecules/SugList';
 
 export function SidebarContent() {
   const [sugs, setSugs] = useState([] as ScheduleList[]);
-  const [computed, setComputed] = useState(false);
 
   return (
     <>
-      <InputForm setSugs={setSugs} setComputed={setComputed} />
+      <InputForm setSugs={setSugs} />
       <Divider variant="middle" />
-      <SugList sugs={sugs} computed={computed} />
+      <SugList sugs={sugs} />
     </>
   );
 }

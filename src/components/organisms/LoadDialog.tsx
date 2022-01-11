@@ -87,7 +87,7 @@ export function LoadDialog(props: Props) {
     const csvId = url.slice(urlHead.length);
     const downloadUrl = `https://chouseisan.com/schedule/List/createCsv?h=${csvId}`;
     const downloadWindow = window.open(downloadUrl);
-    setTimeout(() => downloadWindow?.close(), 500);
+    setTimeout(() => downloadWindow?.close(), 5000); // 5秒後にタブが自動で閉じる
   }
 
   function onClose() {

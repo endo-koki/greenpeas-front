@@ -1,14 +1,17 @@
 import Grid from '@mui/material/Grid';
 import React, { useState } from 'react';
-import { useAppSelector } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { findOptScheduleWithPref, ScheduleList } from '../../calcSchedule';
-import { selectDateArr, selectMemMat } from '../../features/allDateSlice';
+import {
+  selectDateArr,
+  selectMemMat,
+  setCalcState,
+} from '../../features/allDateSlice';
 import { ContainedBtn } from '../atom/ContainedBtn';
 import { NumberSelector } from '../atom/NumberSelector';
 
 export function InputForm(props: {
   setSugs: React.Dispatch<React.SetStateAction<ScheduleList[]>>;
-  setComputed: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [maxDateNum, setMaxDateNum] = useState(3);
   const [minAttendNum, setminAttendNum] = useState(2);
@@ -16,8 +19,10 @@ export function InputForm(props: {
   const memMat = useAppSelector(selectMemMat);
   const dateArr = useAppSelector(selectDateArr);
 
+  const dispatch = useAppDispatch();
+
   function handleClick() {
-    props.setComputed(true);
+    dispatch(setCalcState('pending'));
 
     const includeIdxs: number[] = [];
     const excludeIdxs: number[] = [];
@@ -38,6 +43,7 @@ export function InputForm(props: {
       excludeIdxs
     );
     props.setSugs(sugs);
+    dispatch(setCalcState('computed'));
   }
 
   return (

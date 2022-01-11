@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
   clearSuggestion,
   selectAllDateList,
+  selectCalcState,
   suggestDate,
 } from '../../features/allDateSlice';
 import { ScheduleList } from '../../calcSchedule';
@@ -61,11 +62,19 @@ function SugPaper(props: { sug: ScheduleList }) {
   );
 }
 
-export function SugList(props: { sugs: ScheduleList[]; computed: boolean }) {
-  const noResult = props.computed && props.sugs.length === 0;
-  const cands = noResult
-    ? [<Typography css={classes.noResult}>候補なし</Typography>]
-    : props.sugs.map((sug) => <SugPaper key={uuKey()} sug={sug} />);
+export function SugList(props: { sugs: ScheduleList[] }) {
+  const calcState = useAppSelector(selectCalcState);
+  const noResult = calcState === 'computed' && props.sugs.length === 0;
+  let cands;
+  if (noResult) {
+    cands = [<Typography css={classes.noResult}>候補なし</Typography>];
+  } else if (calcState === 'pending') {
+    cands = [<Typography css={classes.noResult}>計算中…</Typography>];
+  } else if (calcState === 'ready') {
+    cands = [<Typography css={classes.noResult} />];
+  } else {
+    cands = props.sugs.map((sug) => <SugPaper key={uuKey()} sug={sug} />);
+  }
 
   return <div css={classes.sugList}>{cands}</div>;
 }

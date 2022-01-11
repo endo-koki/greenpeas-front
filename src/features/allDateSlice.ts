@@ -8,6 +8,8 @@ export interface allDateState {
   dateArr: DateState[];
   memList: string[];
   allDateList: string[];
+  /** ready: suggestionを計算していない状態, pending: 計算中, computed: 計算終了 */
+  calcState: 'ready' | 'pending' | 'computed';
 }
 
 const initialState: allDateState = {
@@ -15,6 +17,7 @@ const initialState: allDateState = {
   dateArr: [],
   memList: [],
   allDateList: [],
+  calcState: 'ready',
 };
 
 export const allDateSlice = createSlice({
@@ -37,23 +40,19 @@ export const allDateSlice = createSlice({
       state.memList = rawMat[0].slice(1);
       state.allDateList = allDateList;
       state.dateArr = new Array(allDateList.length).fill(2);
-    },
-    /** idx をもらってその idx の dateArr 要素を select/deselect */
-    includeDate: (state, action: PayloadAction<number>) => {
-      const idx: number = action.payload;
-      const currentValue: DateState = state.dateArr[idx];
-      state.dateArr[idx] = currentValue === 0 ? 2 : 0;
-    },
-    excludeDate: (state, action: PayloadAction<number>) => {
-      const idx: number = action.payload;
-      const currentValue: DateState = state.dateArr[idx];
-      state.dateArr[idx] = currentValue === 1 ? 2 : 1;
+      state.calcState = 'ready';
     },
     /** idxのdateStateをincluded→excluded→default→…と変化させる */
     switchDate: (state, action: PayloadAction<number>) => {
       const idx: number = action.payload;
       const currentValue: DateState = state.dateArr[idx];
       state.dateArr[idx] = ((currentValue + 1) % 3) as DateState;
+    },
+    setCalcState: (
+      state,
+      action: PayloadAction<'ready' | 'pending' | 'computed'>
+    ) => {
+      state.calcState = action.payload;
     },
     suggestDate: (state, action: PayloadAction<number>) => {
       const idx: number = action.payload;
@@ -76,9 +75,8 @@ export const allDateSlice = createSlice({
 
 export const {
   setData,
-  includeDate,
-  excludeDate,
   switchDate,
+  setCalcState,
   suggestDate,
   clearSuggestion,
 } = allDateSlice.actions;
@@ -91,6 +89,7 @@ export const selectDateArr = (state: RootState) => state.allDate.dateArr;
 export const selectMemList = (state: RootState) => state.allDate.memList;
 export const selectAllDateList = (state: RootState) =>
   state.allDate.allDateList;
+export const selectCalcState = (state: RootState) => state.allDate.calcState;
 
 // We can also write thunks by hand, which may contain both sync and async logic.
 // Here's an example of conditionally dispatching actions based on current state.
