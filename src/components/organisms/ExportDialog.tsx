@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import { green } from '@mui/material/colors';
 import TextField from '@mui/material/TextField';
+import DialogContent from '@mui/material/DialogContent';
 import { ContainedBtn } from '../atom/ContainedBtn';
 import { OutlinedBtn } from '../atom/OutlinedBtn';
 import { marker2Icon } from '../atom/marker';
@@ -20,6 +21,7 @@ import {
   selectMemMat,
 } from '../../features/allDateSlice';
 
+const dialogWidth = Math.min(450, window.innerWidth - 20);
 const classes = {
   btnOn: css({
     backgroundColor: green[400],
@@ -96,75 +98,77 @@ export function ExportDialog(props: {
   return (
     <Dialog onClose={onClose} open={props.openDialog}>
       <DialogTitle>エクスポート</DialogTitle>
-      <Grid
-        container
-        direction="column"
-        alignItems="left"
-        spacing={1}
-        sx={{ padding: '15px', width: '350px' }}
-      >
-        <Grid item>
-          <Grid
-            container
-            direction="row"
-            justifyContent="flex-start"
-            alignItems="center"
-            spacing={1}
-          >
-            <Grid item>
-              <Typography>含める: </Typography>
+      <DialogContent>
+        <Grid
+          container
+          direction="column"
+          alignItems="left"
+          spacing={1}
+          sx={{ width: `${dialogWidth}px` }}
+        >
+          <Grid item>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-start"
+              alignItems="center"
+              spacing={1}
+            >
+              <Grid item>
+                <Typography>含める: </Typography>
+              </Grid>
+              <Grid item>
+                <IconButton onClick={toggleOk} css={ok && classes.btnOn}>
+                  {marker2Icon('○')}
+                </IconButton>
+              </Grid>
+              <Grid item>
+                <IconButton onClick={toggleQ} css={q && classes.btnOn}>
+                  {marker2Icon('△')}
+                </IconButton>
+              </Grid>
+              <Grid item>
+                <IconButton onClick={toggleNg} css={ng && classes.btnOn}>
+                  {marker2Icon('×')}
+                </IconButton>
+              </Grid>
             </Grid>
-            <Grid item>
-              <IconButton onClick={toggleOk} css={ok && classes.btnOn}>
-                {marker2Icon('○')}
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <IconButton onClick={toggleQ} css={q && classes.btnOn}>
-                {marker2Icon('△')}
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <IconButton onClick={toggleNg} css={ng && classes.btnOn}>
-                {marker2Icon('×')}
-              </IconButton>
+          </Grid>
+
+          <Grid item>
+            <TextField
+              multiline
+              label="text"
+              rows={7}
+              value={infoText}
+              InputProps={{
+                readOnly: true,
+              }}
+              sx={{ width: `100%` }}
+            />
+          </Grid>
+
+          <Grid item>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              spacing={1}
+            >
+              <Grid item>
+                <OutlinedBtn text="戻る" onClick={onClose} />
+              </Grid>
+              <Grid item>
+                <ContainedBtn
+                  text={copied ? 'コピーした！' : 'コピーする'}
+                  onClick={copy}
+                />
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
-
-        <Grid item>
-          <TextField
-            multiline
-            label="text"
-            rows={7}
-            value={infoText}
-            InputProps={{
-              readOnly: true,
-            }}
-            sx={{ width: '300px' }}
-          />
-        </Grid>
-
-        <Grid item>
-          <Grid
-            container
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            spacing={1}
-          >
-            <Grid item>
-              <OutlinedBtn text="戻る" onClick={onClose} />
-            </Grid>
-            <Grid item>
-              <ContainedBtn
-                text={copied ? 'コピーした！' : 'コピーする'}
-                onClick={copy}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
+      </DialogContent>
     </Dialog>
   );
 }

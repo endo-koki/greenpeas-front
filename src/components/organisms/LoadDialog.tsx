@@ -11,11 +11,13 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Collapse from '@mui/material/Collapse';
 import Input from '@mui/material/Input';
+import axios from 'axios';
+import DialogContent from '@mui/material/DialogContent';
 import { setData } from '../../features/allDateSlice';
 import { useAppDispatch } from '../../app/hooks';
 import { ContainedBtn } from '../atom/ContainedBtn';
 import { OutlinedBtn } from '../atom/OutlinedBtn';
-import { sort2d } from '../../utils';
+import { apiRoot, sort2d } from '../../utils';
 
 function csvToRawMat(csv: string): string[][] {
   const csvVecs: string[] = csv.split(',\n');
@@ -26,6 +28,7 @@ function csvToRawMat(csv: string): string[][] {
   return csvMat;
 }
 
+const dialogWidth = Math.min(450, window.innerWidth - 20);
 const classes = {
   fileBtn: css({
     borderRadius: '20px',
@@ -33,11 +36,14 @@ const classes = {
   fileText: css({
     marginLeft: '10px',
   }),
-  urlBtn: css({
+  collapseBtn: css({
     borderRadius: '20px',
   }),
   urlField: css({
-    width: '290px',
+    width: `${dialogWidth - 30}px`,
+  }),
+  dialogContainer: css({
+    width: `${dialogWidth}px`,
   }),
 };
 
@@ -76,7 +82,7 @@ export function LoadDialog(props: Props) {
     setUrl(e.target.value);
   }
 
-  function download() {
+  async function download() {
     const urlHead = 'https://chouseisan.com/s?h=';
     if (url.indexOf(urlHead) !== 0) {
       alert(
@@ -85,9 +91,19 @@ export function LoadDialog(props: Props) {
       return;
     }
     const csvId = url.slice(urlHead.length);
-    const downloadUrl = `https://chouseisan.com/schedule/List/createCsv?h=${csvId}`;
-    const downloadWindow = window.open(downloadUrl);
-    setTimeout(() => downloadWindow?.close(), 5000); // 5秒後にタブが自動で閉じる
+    // const downloadUrl = `https://chouseisan.com/schedule/List/createCsv?h=${csvId}`;
+    // const downloadWindow = window.open(downloadUrl);
+    // setTimeout(() => downloadWindow?.close(), 5000); // 5秒後にタブが自動で閉じる
+
+    // backにリクエストを送り, csvを受け取る
+    const res = await axios.get(`${apiRoot}/load?id=${csvId}`);
+
+    const csvText: string = res.data;
+    const rawMat = csvToRawMat(csvText);
+    const compareFn = (a: string, b: string) => (a <= b ? -1 : 1);
+    const sortedMat = sort2d(rawMat, compareFn, 0, 1);
+
+    dispatch(setData(sortedMat));
   }
 
   function onClose() {
@@ -97,91 +113,106 @@ export function LoadDialog(props: Props) {
 
   return (
     <Dialog onClose={onClose} open={props.openDialog}>
-      <DialogTitle>csvファイルを選択</DialogTitle>
-      <Grid
-        container
-        direction="column"
-        alignItems="left"
-        spacing={1}
-        sx={{ padding: '15px', width: '350px' }}
-      >
-        <Grid item>
-          <Grid container alignItems="center">
-            <Grid item>
-              <Button
-                variant="outlined"
-                component="label"
-                css={classes.fileBtn}
-              >
-                ファイルを選択
-                <input
-                  type="file"
-                  accept=".csv"
-                  hidden
-                  onChange={(e) => handleFileChange(e)}
+      <DialogTitle>出欠表の読込</DialogTitle>
+      <DialogContent>
+        <Grid
+          container
+          direction="column"
+          alignItems="left"
+          spacing={1}
+          css={classes.dialogContainer}
+        >
+          <Grid item>
+            <Grid
+              container
+              direction="column"
+              alignItems="flex-start"
+              spacing={1}
+            >
+              <Grid item>
+                <Typography>
+                  調整さんのURLを入力して読込ボタンを押してください。
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Input
+                  id="url"
+                  value={url}
+                  placeholder="https://chouseisan.com/s?h=……"
+                  onChange={handleUrlChange}
+                  css={classes.urlField}
                 />
-              </Button>
-            </Grid>
-            <Grid item>
-              <Typography sx={{ ml: '8px' }}>{filename}</Typography>
+              </Grid>
+              <Grid item sx={{ width: `${dialogWidth}px` }}>
+                <Grid
+                  container
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  spacing={1}
+                >
+                  <Grid item>
+                    <OutlinedBtn text="戻る" onClick={onClose} />
+                  </Grid>
+                  <Grid item>
+                    <ContainedBtn text="読込" onClick={download} />
+                  </Grid>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-        <Grid item>
-          <Button
-            variant="text"
-            startIcon={
-              openUrl ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />
-            }
-            color="primary"
-            onClick={() => setOpenUrl(!openUrl)}
-            css={classes.urlBtn}
-          >
-            csvファイルを持っていない？
-          </Button>
+          <Grid item>
+            <Button
+              variant="text"
+              startIcon={
+                openUrl ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />
+              }
+              color="primary"
+              onClick={() => setOpenUrl(!openUrl)}
+              css={classes.collapseBtn}
+            >
+              読み込みできない？
+            </Button>
+          </Grid>
         </Grid>
         <Collapse in={openUrl} timeout="auto">
           <Grid
             container
             direction="column"
-            alignItems="flex-start"
+            alignItems="left"
             spacing={1}
+            css={classes.dialogContainer}
           >
-            <Grid item sx={{ margin: '0 15px' }}>
+            <Grid item>
               <Typography>
-                調整さんのURLを入力してダウンロードボタンを押してください。
+                調整さんのサイトからcsvファイルをダウンロードしてここにアップロードしてください。
               </Typography>
             </Grid>
-            <Grid item sx={{ ml: '15px' }}>
-              <Input
-                id="url"
-                value={url}
-                placeholder="https://chouseisan.com/s?h=……"
-                onChange={handleUrlChange}
-                css={classes.urlField}
-              />
-            </Grid>
-            <Grid item sx={{ ml: '15px' }}>
-              <OutlinedBtn text="ダウンロード" onClick={download} />
+            <Grid item>
+              <Grid container alignItems="center">
+                <Grid item>
+                  <Button
+                    variant="outlined"
+                    component="label"
+                    css={classes.fileBtn}
+                  >
+                    ファイルを選択
+                    <input
+                      type="file"
+                      accept=".csv"
+                      hidden
+                      onChange={(e) => handleFileChange(e)}
+                    />
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Typography sx={{ ml: '8px' }}>{filename}</Typography>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </Collapse>
-        <Grid item>
-          <Grid
-            container
-            alignItems="center"
-            justifyContent="flex-end"
-            spacing={1}
-          >
-            {/* <Grid item>
-              <OutlinedBtn text="戻る" onClick={props.onClose} />
-            </Grid> */}
-            <Grid item>
-              <ContainedBtn text="OK" onClick={onClose} />
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
+      </DialogContent>
     </Dialog>
   );
 }

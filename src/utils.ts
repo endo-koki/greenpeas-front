@@ -1,6 +1,8 @@
 // global var
 export const margin: number = 10;
 
+export const apiRoot: string = 'http://localhost:5000';
+
 /** calculate table width. (table width = cell width + border width * 2) */
 export function calcTableWidth(
   headWidth: number,

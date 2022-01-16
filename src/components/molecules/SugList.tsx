@@ -67,11 +67,19 @@ export function SugList(props: { sugs: ScheduleList[] }) {
   const noResult = calcState === 'computed' && props.sugs.length === 0;
   let cands;
   if (noResult) {
-    cands = [<Typography css={classes.noResult}>候補なし</Typography>];
+    cands = [
+      <Typography key={uuKey()} css={classes.noResult}>
+        候補なし
+      </Typography>,
+    ];
   } else if (calcState === 'pending') {
-    cands = [<Typography css={classes.noResult}>計算中…</Typography>];
+    cands = [
+      <Typography key={uuKey()} css={classes.noResult}>
+        計算中…
+      </Typography>,
+    ];
   } else if (calcState === 'ready') {
-    cands = [<Typography css={classes.noResult} />];
+    cands = [<Typography key={uuKey()} css={classes.noResult} />];
   } else {
     cands = props.sugs.map((sug) => <SugPaper key={uuKey()} sug={sug} />);
   }

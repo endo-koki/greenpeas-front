@@ -58,7 +58,7 @@ export function TopBar(props: {
               onClick={props.onOpenLoader}
               css={classes.loadBtn}
             >
-              csvファイルを読込
+              出欠表を読込
             </Button>
           </Grid>
           <Grid item>
