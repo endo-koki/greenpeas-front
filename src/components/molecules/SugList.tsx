@@ -1,6 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope -- Unaware of jsxImportSource */
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
+import CircularProgress from '@mui/material/CircularProgress';
 import { green } from '@mui/material/colors';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -12,7 +13,6 @@ import {
   selectCalcState,
   suggestDate,
 } from '../../features/allDateSlice';
-import { ScheduleList } from '../../calcSchedule';
 import { uuKey } from '../../utils';
 
 const classes = {
@@ -39,17 +39,17 @@ const classes = {
   }),
 };
 
-function SugPaper(props: { sug: ScheduleList }) {
+function SugPaper(props: { sugDateIdxs: number[] }) {
   const allDateList = useAppSelector(selectAllDateList);
   const dispatch = useAppDispatch();
 
-  const dateList = props.sug.dateIdxs.map((idx) => (
+  const dateList = props.sugDateIdxs.map((idx) => (
     <li key={uuKey()}>{allDateList[idx]}</li>
   ));
 
   function handleClick() {
     dispatch(clearSuggestion());
-    props.sug.dateIdxs.forEach((idx) => {
+    props.sugDateIdxs.forEach((idx) => {
       dispatch(suggestDate(idx));
     });
   }
@@ -62,27 +62,57 @@ function SugPaper(props: { sug: ScheduleList }) {
   );
 }
 
-export function SugList(props: { sugs: ScheduleList[] }) {
+export function SugList(props: { sugDateIdxs: number[] }) {
   const calcState = useAppSelector(selectCalcState);
-  const noResult = calcState === 'computed' && props.sugs.length === 0;
-  let cands;
-  if (noResult) {
-    cands = [
-      <Typography key={uuKey()} css={classes.noResult}>
-        候補なし
-      </Typography>,
-    ];
-  } else if (calcState === 'pending') {
-    cands = [
-      <Typography key={uuKey()} css={classes.noResult}>
-        計算中…
-      </Typography>,
-    ];
-  } else if (calcState === 'ready') {
-    cands = [<Typography key={uuKey()} css={classes.noResult} />];
-  } else {
-    cands = props.sugs.map((sug) => <SugPaper key={uuKey()} sug={sug} />);
+
+  let statusStrs: string[] = [];
+  let suggestion = null;
+  switch (calcState) {
+    case 'init':
+    case 'ready':
+    case 'LOADED':
+      break;
+    case 'pending':
+      statusStrs = ['計算中…'];
+      suggestion = (
+        <CircularProgress sx={{ display: 'block', margin: '0 auto' }} />
+      );
+      break;
+    case 'OPTIMAL':
+      suggestion = <SugPaper sugDateIdxs={props.sugDateIdxs} />;
+      break;
+    case 'FEASIBLE':
+      statusStrs = [
+        '計算が終わらなかったため途中結果を表示しました。',
+        '候補日数を減らすとより良い解が見つかるかもしれません。',
+      ];
+      suggestion = <SugPaper sugDateIdxs={props.sugDateIdxs} />;
+      break;
+    case 'INFEASIBLE':
+    case 'INT_INFEASIBLE':
+    case 'CUTOFF':
+    case 'NO_SOLUTION_FOUND':
+      statusStrs = ['候補なし。', '条件を緩めてください。'];
+      break;
+    case 'ERROR':
+    case 'UNBOUNDED':
+      statusStrs = ['計算中にエラーが発生しました。', calcState];
+      break;
+    default:
+      break;
   }
 
-  return <div css={classes.sugList}>{cands}</div>;
+  const text: any[] = [];
+  statusStrs.forEach((str) => {
+    text.push(str);
+    text.push(<br />);
+  });
+  text.pop();
+
+  return (
+    <div css={classes.sugList}>
+      <Typography css={classes.noResult}>{text}</Typography>
+      {suggestion}
+    </div>
+  );
 }

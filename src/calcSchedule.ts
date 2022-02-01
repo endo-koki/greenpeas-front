@@ -1,166 +1,25 @@
-import { argsort, TopKList } from './utils';
+import axios from 'axios';
+import { MipStatus } from './features/allDateSlice';
+import { apiRoot, argsort } from './utils';
 
 const MARU = 1;
 const SANKAKU = 0.2;
 const BATSU = 0;
 type Answer = typeof MARU | typeof SANKAKU | typeof BATSU;
 
-class ScheduleNode {
-  private dateArr: (0 | 1)[] = [];
-  attendCnts: number[] = [];
-  totalCnt: number = 0;
-  minCnt: number = 0;
-
-  /** Creates an empty node. */
-  constructor(totalDateNum: number, memNum: number) {
-    if (totalDateNum > 0 && memNum > 0) {
-      this.dateArr = new Array(totalDateNum).fill(0);
-      this.attendCnts = new Array(memNum).fill(0);
-    }
-  }
-
-  static copy(sn: ScheduleNode): ScheduleNode {
-    const newSn: ScheduleNode = new ScheduleNode(-1, -1);
-    newSn.dateArr = sn.dateArr.slice();
-    newSn.attendCnts = sn.attendCnts.slice();
-    newSn.totalCnt = sn.totalCnt;
-    newSn.minCnt = sn.minCnt;
-    return newSn;
-  }
-
-  /** The number of dates added to this.arr. */
-  get dateNum(): number {
-    return this.dateArr.filter((val) => val === 1).length;
-  }
-
-  /** 採用した日程のindex */
-  get dateIdxs(): number[] {
-    const ret: number[] = [];
-    this.dateArr.forEach((val, idx) => {
-      if (val === 1) ret.push(idx);
-    });
-    return ret;
-  }
-
-  isBetterThan(sn: ScheduleNode): boolean {
-    if (this.totalCnt > sn.totalCnt) return true;
-    if (this.totalCnt < sn.totalCnt) return false;
-    return this.minCnt > sn.minCnt;
-  }
-
-  init(attendCnts: number[]): void {
-    this.attendCnts = attendCnts.slice();
-    this.totalCnt = attendCnts.reduce((a, b) => a + b);
-    this.minCnt = Math.min(...attendCnts);
-  }
-
-  addDate(dateIdx: number, memMat: Answer[][]): boolean {
-    if (this.dateArr[dateIdx] === 0) {
-      this.dateArr[dateIdx] = 1;
-      const memVec: Answer[] = memMat[dateIdx];
-      memVec.forEach((val, idx) => {
-        this.attendCnts[idx] += val;
-        this.totalCnt += val;
-      });
-      this.minCnt = Math.min(...this.attendCnts);
-      return true;
-    }
-    return false;
-  }
-
-  idealPadding(margin: number): void {
-    this.attendCnts.forEach((_, idx) => {
-      this.attendCnts[idx] += margin * MARU;
-    });
-    this.totalCnt += margin * MARU * this.attendCnts.length;
-    this.minCnt += margin * MARU;
-  }
-
-  rightMostOneIdx(): number {
-    const dateNum: number = this.dateArr.length;
-    for (let idx = dateNum - 1; idx >= 0; idx--) {
-      if (this.dateArr[idx] === 1) {
-        return idx;
-      }
-    }
-    return -1;
-  }
-
-  /** dateArrの一番右側の0領域に1つだけ1を追加して子を作る */
-  generateChildren(memMat: Answer[][], maxDateNum: number): ScheduleNode[] {
-    const margin: number = maxDateNum - this.dateNum; // これから追加する日数. 右側に margin-1 個の0がない子は作ってはいけない
-    const children: ScheduleNode[] = [];
-    const totalDateNum: number = this.dateArr.length;
-    const rmoIdx: number = this.rightMostOneIdx();
-    for (let i = rmoIdx + 1; i < totalDateNum + 1 - margin; i++) {
-      const child: ScheduleNode = ScheduleNode.copy(this);
-      child.addDate(i, memMat);
-      children.push(child);
-    }
-    return children;
-  }
-}
-
-export type ScheduleList = {
+export type FlaskResponse = {
+  status: MipStatus;
   dateIdxs: number[];
-  attendCnts: number[];
 };
 
-function findOptSchedule(
-  memMat: Answer[][],
-  maxDateNum: number,
-  minAttendNum: number,
-  candNum: number,
-  rootNode: ScheduleNode
-): ScheduleNode[] {
-  const candidates: TopKList<ScheduleNode> = new TopKList(candNum, (a, b) =>
-    a.isBetterThan(b)
-  );
-
-  // 枝刈りできるならtrue
-  const canSkip = (sn: ScheduleNode) => {
-    const margin: number = maxDateNum - sn.dateNum; // 追加できる練習日数
-
-    // 最低参加回数を満たせる余地がなければ枝刈り
-    const idealSn: ScheduleNode = ScheduleNode.copy(sn);
-    idealSn.idealPadding(margin);
-    if (idealSn.minCnt < minAttendNum) {
-      return true;
-    }
-
-    // Top K に入る余地がなければ枝刈り
-    const { lastItem } = candidates;
-    if (lastItem === null) return false;
-    return !idealSn.isBetterThan(lastItem);
-  };
-
-  const stack: ScheduleNode[] = [rootNode];
-  while (true) {
-    const sn = stack.pop();
-    if (sn === undefined) break; // stack is empty
-
-    if (canSkip(sn)) continue; // 枝刈りできるならcontinue
-
-    if (sn.dateNum === maxDateNum) {
-      // 全日程追加済み
-      candidates.insert(sn);
-    } else {
-      const children: ScheduleNode[] = sn.generateChildren(memMat, maxDateNum);
-      children.forEach((child) => stack.push(child));
-    }
-  }
-
-  return candidates.list;
-}
-
-export function findOptScheduleWithPref(
+export async function findOptScheduleWithPrefPy(
   memMat: string[][],
   maxDateNum: number,
   minAttendNum: number,
   candNum: number,
   includeIdxs: number[],
   excludeIdxs: number[]
-): ScheduleList[] {
+): Promise<FlaskResponse> {
   // memMat (string[][]) をresMat (Answer[][]) に変換
   const resMat: Answer[][] = memMat.map((memVec) =>
     memVec.map((str) => {
@@ -224,27 +83,22 @@ export function findOptScheduleWithPref(
 
   const matMaps: number[] = maps2.map((idx) => maps1[idx]); // maps[i] = maps1[maps2[i]]
 
-  const totalDateNum: number = sortedMat.length;
-  const rootNode: ScheduleNode = new ScheduleNode(totalDateNum, memNum);
-  rootNode.init(attendCnts);
-
-  const topList: ScheduleNode[] = findOptSchedule(
-    sortedMat,
-    maxDateNum - includeIdxs.length,
+  // 通信
+  const params = {
+    memMat: sortedMat,
+    maxDateNum: maxDateNum - includeIdxs.length,
     minAttendNum,
     candNum,
-    rootNode
-  );
+  };
+  const response = await axios.post(`${apiRoot}/calcSchedule`, params);
 
   // データ整形
-  const candidates: ScheduleList[] = topList.map((node) => {
-    let dateIdxs: number[] = node.dateIdxs.map((idx) => matMaps[idx]);
-    dateIdxs = dateIdxs.concat(includeIdxs).sort((a, b) => a - b);
-    return {
-      dateIdxs,
-      attendCnts: node.attendCnts,
-    };
-  });
-
-  return candidates;
+  let dateIdxs: number[] = response.data.dateIdxs.map(
+    (idx: number) => matMaps[idx]
+  );
+  dateIdxs = dateIdxs.concat(includeIdxs).sort((a, b) => a - b);
+  return {
+    status: response.data.status,
+    dateIdxs,
+  };
 }

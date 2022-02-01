@@ -3,13 +3,24 @@ import { RootState } from '../app/store';
 
 /** -1: suggested, 0: included, 1: excluded, 2: default */
 export type DateState = -1 | 0 | 1 | 2;
+export type MipStatus =
+  | 'CUTOFF'
+  | 'ERROR'
+  | 'FEASIBLE'
+  | 'INFEASIBLE'
+  | 'INT_INFEASIBLE'
+  | 'LOADED'
+  | 'NO_SOLUTION_FOUND'
+  | 'OPTIMAL'
+  | 'UNBOUNDED';
+/** init: 初期状態, ready: サーバと通信できてsuggestionを計算していない状態, pending: 計算中, 計算終了はMipStatus */
+export type CalcState = 'init' | 'ready' | 'pending' | MipStatus;
 export interface allDateState {
   memMat: string[][];
   dateArr: DateState[];
   memList: string[];
   allDateList: string[];
-  /** ready: suggestionを計算していない状態, pending: 計算中, computed: 計算終了 */
-  calcState: 'ready' | 'pending' | 'computed';
+  calcState: CalcState;
 }
 
 const initialState: allDateState = {
@@ -48,10 +59,7 @@ export const allDateSlice = createSlice({
       const currentValue: DateState = state.dateArr[idx];
       state.dateArr[idx] = ((currentValue + 1) % 3) as DateState;
     },
-    setCalcState: (
-      state,
-      action: PayloadAction<'ready' | 'pending' | 'computed'>
-    ) => {
+    setCalcState: (state, action: PayloadAction<CalcState>) => {
       state.calcState = action.payload;
     },
     suggestDate: (state, action: PayloadAction<number>) => {

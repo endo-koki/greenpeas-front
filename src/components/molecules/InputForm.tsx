@@ -1,27 +1,29 @@
+import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { findOptScheduleWithPref, ScheduleList } from '../../calcSchedule';
+import { findOptScheduleWithPrefPy } from '../../calcSchedule';
 import {
+  selectCalcState,
   selectDateArr,
   selectMemMat,
   setCalcState,
 } from '../../features/allDateSlice';
-import { ContainedBtn } from '../atom/ContainedBtn';
 import { NumberSelector } from '../atom/NumberSelector';
 
 export function InputForm(props: {
-  setSugs: React.Dispatch<React.SetStateAction<ScheduleList[]>>;
+  setSugDateIdxs: React.Dispatch<React.SetStateAction<number[]>>;
 }) {
   const [maxDateNum, setMaxDateNum] = useState(3);
   const [minAttendNum, setminAttendNum] = useState(2);
 
   const memMat = useAppSelector(selectMemMat);
   const dateArr = useAppSelector(selectDateArr);
+  const calcState = useAppSelector(selectCalcState);
 
   const dispatch = useAppDispatch();
 
-  function handleClick() {
+  async function handleClick() {
     dispatch(setCalcState('pending'));
 
     const includeIdxs: number[] = [];
@@ -34,7 +36,7 @@ export function InputForm(props: {
       }
     });
 
-    const sugs = findOptScheduleWithPref(
+    const res = await findOptScheduleWithPrefPy(
       memMat,
       maxDateNum,
       minAttendNum,
@@ -42,9 +44,11 @@ export function InputForm(props: {
       includeIdxs,
       excludeIdxs
     );
-    props.setSugs(sugs);
-    dispatch(setCalcState('computed'));
+    props.setSugDateIdxs(res.dateIdxs);
+    dispatch(setCalcState(res.status));
   }
+
+  const disabled = calcState === 'init' || calcState === 'pending';
 
   return (
     <Grid
@@ -68,7 +72,14 @@ export function InputForm(props: {
         />
       </Grid>
       <Grid item sx={{ marginTop: '8px' }}>
-        <ContainedBtn text="計算する！" onClick={handleClick} />
+        <Button
+          variant="contained"
+          disabled={disabled}
+          onClick={handleClick}
+          sx={{ borderRadius: '20px' }}
+        >
+          計算する！
+        </Button>
       </Grid>
     </Grid>
   );
