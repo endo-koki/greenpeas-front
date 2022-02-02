@@ -13,6 +13,7 @@ import Collapse from '@mui/material/Collapse';
 import Input from '@mui/material/Input';
 import axios from 'axios';
 import DialogContent from '@mui/material/DialogContent';
+import CircularProgress from '@mui/material/CircularProgress';
 import { setData } from '../../features/allDateSlice';
 import { useAppDispatch } from '../../app/hooks';
 import { ContainedBtn } from '../atom/ContainedBtn';
@@ -55,6 +56,7 @@ export function LoadDialog(props: Props) {
   const [file, setFile] = useState(null as File | null);
   const [openUrl, setOpenUrl] = useState(false);
   const [url, setUrl] = useState('');
+  const [loading, setLoading] = useState(false);
   const filename = file === null ? 'ファイル未選択' : file.name;
 
   const dispatch = useAppDispatch();
@@ -90,6 +92,7 @@ export function LoadDialog(props: Props) {
       );
       return;
     }
+    setLoading(true);
     const csvId = url.slice(urlHead.length);
     // const downloadUrl = `https://chouseisan.com/schedule/List/createCsv?h=${csvId}`;
     // const downloadWindow = window.open(downloadUrl);
@@ -104,6 +107,7 @@ export function LoadDialog(props: Props) {
     const sortedMat = sort2d(rawMat, compareFn, 0, 1);
 
     dispatch(setData(sortedMat));
+    setLoading(false);
   }
 
   function onClose() {
@@ -154,8 +158,18 @@ export function LoadDialog(props: Props) {
                   <Grid item>
                     <OutlinedBtn text="戻る" onClick={onClose} />
                   </Grid>
+                  <Grid item sx={{ flexGrow: 1 }} />
+                  {loading && (
+                    <Grid item>
+                      <CircularProgress size={30} />
+                    </Grid>
+                  )}
                   <Grid item>
-                    <ContainedBtn text="読込" onClick={download} />
+                    <ContainedBtn
+                      text="読込"
+                      disabled={loading}
+                      onClick={download}
+                    />
                   </Grid>
                 </Grid>
               </Grid>

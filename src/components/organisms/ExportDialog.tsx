@@ -162,6 +162,7 @@ export function ExportDialog(props: {
               <Grid item>
                 <ContainedBtn
                   text={copied ? 'コピーした！' : 'コピーする'}
+                  disabled={false}
                   onClick={copy}
                 />
               </Grid>

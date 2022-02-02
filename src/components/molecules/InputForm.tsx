@@ -1,4 +1,3 @@
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -9,6 +8,7 @@ import {
   selectMemMat,
   setCalcState,
 } from '../../features/allDateSlice';
+import { ContainedBtn } from '../atom/ContainedBtn';
 import { NumberSelector } from '../atom/NumberSelector';
 
 export function InputForm(props: {
@@ -72,14 +72,11 @@ export function InputForm(props: {
         />
       </Grid>
       <Grid item sx={{ marginTop: '8px' }}>
-        <Button
-          variant="contained"
+        <ContainedBtn
+          text="計算する！"
           disabled={disabled}
           onClick={handleClick}
-          sx={{ borderRadius: '20px' }}
-        >
-          計算する！
-        </Button>
+        />
       </Grid>
     </Grid>
   );

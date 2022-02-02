@@ -8,9 +8,18 @@ const btnCls = css({
   borderRadius: '20px',
 });
 
-export function ContainedBtn(props: { text: string; onClick: () => void }) {
+export function ContainedBtn(props: {
+  text: string;
+  disabled: boolean;
+  onClick: () => void;
+}) {
   return (
-    <Button variant="contained" onClick={props.onClick} css={btnCls}>
+    <Button
+      variant="contained"
+      disabled={props.disabled}
+      onClick={props.onClick}
+      css={btnCls}
+    >
       {props.text}
     </Button>
   );
