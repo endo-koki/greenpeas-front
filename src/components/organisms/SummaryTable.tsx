@@ -51,7 +51,7 @@ function SummaryHead() {
   return (
     <TableHead>
       <TableRow>
-        <TableCell css={classes.thCol} />
+        <TableCell css={classes.thCol} sx={{ borderRadius: '10px 0 0 0' }} />
         {cells}
       </TableRow>
     </TableHead>

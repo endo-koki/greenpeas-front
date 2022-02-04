@@ -71,7 +71,7 @@ function DetailHead() {
   return (
     <TableHead>
       <TableRow>
-        <TableCell css={classes.thCol0} />
+        <TableCell css={classes.thCol0} sx={{ borderRadius: '10px 0 0 0' }} />
         <TableCell align="center" css={classes.thCol1}>
           {marker2Icon('○')}
         </TableCell>
