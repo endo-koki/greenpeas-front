@@ -67,11 +67,11 @@ export async function findOptScheduleWithPrefPy(
   }
 
   const memNum: number = resMat[0].length;
-  const attendCnts: number[] = new Array(memNum).fill(0);
+  const minAttendNums: number[] = new Array(memNum).fill(minAttendNum);
   includeIdxs.forEach((idx) => {
     const memVec: Answer[] = resMat[idx];
     memVec.forEach((val, i) => {
-      attendCnts[i] += val;
+      minAttendNums[i] -= val;
     });
   });
 
@@ -87,7 +87,7 @@ export async function findOptScheduleWithPrefPy(
   const params = {
     memMat: sortedMat,
     maxDateNum: maxDateNum - includeIdxs.length,
-    minAttendNum,
+    minAttendNums,
     candNum,
   };
   const response = await axios.post(`${apiRoot}/calcSchedule`, params);
