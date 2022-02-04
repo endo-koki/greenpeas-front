@@ -44,7 +44,7 @@ export async function findOptScheduleWithPrefPy(
     const reducedMat: Answer[][] = [];
     const maps1: number[] = []; // reducedMat -> memMat のmapping
     for (let i = 0; i < mat.length; i++) {
-      const memVec: Answer[] = mat[i];
+      const memVec = mat[i];
       if (removeIdxs.includes(i)) continue; // 除外対象
       reducedMat.push(memVec);
       maps1.push(i);
@@ -56,20 +56,20 @@ export async function findOptScheduleWithPrefPy(
   function sortMat(
     reducedMat: Answer[][]
   ): [sortedMat: Answer[][], maps2: number[]] {
-    const attendCnts: number[] = reducedMat.map((memVec) =>
+    const attendCnts = reducedMat.map((memVec) =>
       (memVec as number[]).reduce((a, b) => a + b)
     );
-    const maps2: number[] = argsort(attendCnts, (a, b) => a - b);
+    const maps2 = argsort(attendCnts, (a, b) => a - b);
     const sortedMat: Answer[][] = [];
     maps2.forEach((idx) => sortedMat.push(reducedMat[idx]));
 
     return [sortedMat, maps2];
   }
 
-  const memNum: number = resMat[0].length;
+  const memNum = resMat[0].length;
   const minAttendNums: number[] = new Array(memNum).fill(minAttendNum);
   includeIdxs.forEach((idx) => {
-    const memVec: Answer[] = resMat[idx];
+    const memVec = resMat[idx];
     memVec.forEach((val, i) => {
       minAttendNums[i] -= val;
     });
@@ -81,7 +81,7 @@ export async function findOptScheduleWithPrefPy(
   );
   const [sortedMat, maps2] = sortMat(reducedMat);
 
-  const matMaps: number[] = maps2.map((idx) => maps1[idx]); // maps[i] = maps1[maps2[i]]
+  const matMaps = maps2.map((idx) => maps1[idx]); // maps[i] = maps1[maps2[i]]
 
   // 通信
   const params = {
