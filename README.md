@@ -12,3 +12,9 @@
 3. 提示された候補をクリックして採用する。
    - 日程の選択/非選択は上の表をクリックすることでも可能
 4. 「調整結果をエクスポート」をクリックして、結果をコピー。
+
+## 使用したフレームワークなど
+
+- [React](https://reactjs.org)
+- [Redux Toolkit](https://redux-toolkit.js.org)
+- [Material-UI](https://mui.com)
