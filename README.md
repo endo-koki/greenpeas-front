@@ -3,6 +3,7 @@
 複数の練習日程を自動で決めてくれるツールです。
 
 - 公開先…https://greenpeas.vercel.app
+- デモ動画…https://drive.google.com/file/d/1qPxrNAahpI3XZlx4JFJARmRFcTb33Bq7/view?usp=sharing
 - バックエンド側…https://github.com/endo-koki/greenpeas-back
 
 ## 使い方
